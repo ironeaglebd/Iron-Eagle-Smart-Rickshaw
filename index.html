@@ -143,41 +143,7 @@
       color: #7a808a;
       text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
     }
-
-    .splash-counter {
-      position: absolute;
-      left: 50%;
-      bottom: 14%;
-      transform: translateX(-50%);
-      z-index: 2;
-      text-align: center;
-      pointer-events: none;
-      font-family: "Poppins", sans-serif;
-      font-weight: 500;
-      font-size: 0.95rem;
-      letter-spacing: 0.06em;
-      color: #a8aeb8;
-      line-height: 1.4;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.65);
-      white-space: nowrap;
-    }
-    .splash-counter .splash-counter-label {
-      display: block;
-      font-size: 0.72rem;
-      font-weight: 400;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: #7a808a;
-      margin-bottom: 2px;
-    }
-    .splash-counter .splash-counter-value {
-      font-weight: 500;
-      font-size: 1.05rem;
-      color: #b4bac4;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .page-stack {
+.page-stack {
       width: 100%;
       max-width: 430px;
       margin: 0 auto;
@@ -907,11 +873,7 @@
       </div>
       <span class="splash-progress-label">Loading</span>
     </div>
-    <div class="splash-counter" aria-live="polite">
-      <span class="splash-counter-label">Visits</span>
-      <span class="splash-counter-value" id="visitCount">—</span>
-    </div>
-  </div>
+</div>
 
   <main class="page-stack" id="pageStack">
     <div class="page">
@@ -1062,60 +1024,7 @@
           bar.style.width = "100%";
         }
       })();
-
-
-
-      /* ===== Page visit counter (splash) ===== */
-      (function initVisitCounter() {
-        var el = document.getElementById("visitCount");
-        if (!el) return;
-
-        var storageKey = "ironeaglebd_visit_count";
-        var apiUrl = "https://api.counterapi.dev/v1/ironeaglebd/homepage/up";
-
-        function formatNum(n) {
-          try { return Number(n).toLocaleString("en-US"); }
-          catch (e) { return String(n); }
-        }
-
-        function show(n) {
-          el.textContent = formatNum(n);
-        }
-
-        // Optimistic local bump for instant feedback
-        var local = 0;
-        try {
-          local = parseInt(localStorage.getItem(storageKey) || "0", 10) || 0;
-          local += 1;
-          localStorage.setItem(storageKey, String(local));
-        } catch (e) {
-          local = 1;
-        }
-
-        // Prefer global counter API; fall back to local device count
-        if (typeof fetch === "function") {
-          fetch(apiUrl, { method: "GET", mode: "cors", cache: "no-store" })
-            .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-            .then(function (data) {
-              var value = (data && (data.count != null ? data.count : data.value));
-              if (value != null && !isNaN(Number(value))) {
-                show(value);
-                try { localStorage.setItem(storageKey, String(value)); } catch (e) {}
-              } else {
-                show(local);
-              }
-            })
-            .catch(function () {
-              show(local);
-            });
-        } else {
-          show(local);
-        }
-      })();
-
-
-
-      function hideSplash() {
+function hideSplash() {
         var elapsed = Date.now() - splashStart;
         var wait = Math.max(0, splashMinMs - elapsed);
         setTimeout(function () {
